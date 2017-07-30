@@ -1,0 +1,93 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+    defaultConfig {
+        applicationId "com.movitech.HNAInfrastructure.assistant"
+        minSdkVersion 16
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+
+        buildConfigField "int", "VERSION_TYPE", VERSION_DEV
+
+        multiDexEnabled true
+    }
+
+    signingConfigs {
+        release {
+            storeFile file("keystore/Assistant.jks")
+            storePassword "assistant123"
+            keyAlias "assistant"
+            keyPassword "assistant123"
+//            v2SigningEnabled false
+        }
+        debug {
+            storeFile file("keystore/Assistant.jks")
+            storePassword "assistant123"
+            keyAlias "assistant"
+            keyPassword "assistant123"
+//            v2SigningEnabled false
+        }
+    }
+
+    productFlavors {
+        prod {
+            applicationId "com.movitech.HNAInfrastructure.assistant"
+            buildConfigField "int", "VERSION_TYPE", VERSION_PROD
+//            manifestPlaceholders = []
+        }
+
+        dev {
+            applicationId "com.movitech.HNAInfrastructure.assistant.dev"
+            buildConfigField "int", "VERSION_TYPE", VERSION_DEV
+//            manifestPlaceholders = []
+        }
+    }
+
+    buildTypes {
+        release {
+            debuggable false
+            minifyEnabled false
+            signingConfig signingConfigs.release
+
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    def outputFile = output.outputFile
+                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                        if ((variant.productFlavors[0].name).equals('prod')) {
+                            def fileName = "HNAssistant.apk"
+                            output.outputFile = new File(outputFile.parent, fileName)
+                        } else if ((variant.productFlavors[0].name).equals('dev')) {
+                            def fileName = "HNAssistant_dev.apk"
+                            output.outputFile = new File(outputFile.parent, fileName)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:multidex:1.0.1'
+
+    compile 'cn.pedant.safewebviewbridge:library:1.4'
+
+    compile(name: 'vlc-android-sdk', ext: 'aar')
+}
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
