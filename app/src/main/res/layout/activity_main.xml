@@ -10,7 +10,7 @@
     <!--<Button-->
         <!--android:id="@+id/btn"-->
         <!--android:layout_width="wrap_content"-->
-        <!--android:text="监控"-->
+        <!--android:text="清除缓存"-->
         <!--android:layout_height="wrap_content"/>-->
     <WebView
         android:id="@+id/webView"

@@ -14,7 +14,7 @@ import cn.pedant.SafeWebViewBridge.InjectedChromeClient;
 
 public class MainActivity extends AppCompatActivity {
 
-    private String url = "http://10.127.26.94:60002/hna_assistant/AdminMain/index";
+    private String url = "http://116.204.25.45/hna_assistant/adminmain/index";
 
     private WebView webView;
 
@@ -23,14 +23,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
 //        findViewById(R.id.btn).setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//                Intent intent = new Intent(MainActivity.this, VideoActivity.class);
-//                intent.putExtra("name", "监控");
-//                intent.putExtra("url", "rtsp://116.204.25.14:554/camera_15938.264");
-//                startActivity(intent);
+//                HostJsScope.clearCache(webView);
+////                Intent intent = new Intent(MainActivity.this, VideoActivity.class);
+////                intent.putExtra("name", "监控");
+////                intent.putExtra("url", "rtsp://116.204.25.14:554/camera_15938.264");
+////                startActivity(intent);
 //            }
 //        });
 
@@ -69,8 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext(), android.R.style
-                    .Theme_DeviceDefault_Light_Dialog);
+            AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext(), android.R.style.Theme_DeviceDefault_Light_Dialog);
             builder.setMessage(message)
                     .setPositiveButton(android.R.string.ok, new AlertDialog.OnClickListener() {
                         @Override
@@ -87,9 +86,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public boolean onJsPrompt(WebView view, String url, String message, String defaultValue, JsPromptResult
-                result) {
+        public boolean onJsPrompt(WebView view, String url, String message, String defaultValue, JsPromptResult result) {
             return super.onJsPrompt(view, url, message, defaultValue, result);
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
 }
