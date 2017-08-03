@@ -60,6 +60,7 @@ public class HostJsScope {
 //                    }).create().show();
 //        }
 //    }
+
     public static void showTaskCalendarConfirm(WebView webView, String name, String url) {
         Context context = webView.getContext();
         Intent intent = new Intent(context, VideoActivity.class);
@@ -69,7 +70,6 @@ public class HostJsScope {
     }
 
     public static void clearCache(WebView webView) {
-        Log.i("msg", "clearCache");
         Context context = webView.getContext();
         FileCacheUtils.cleanInternalCache(context);
         FileCacheUtils.cleanExternalCache(context);
@@ -92,25 +92,6 @@ public class HostJsScope {
         CookieManager.getInstance().removeAllCookie();
         CookieManager.getInstance().removeExpiredCookie();
         webView.getContext().getCacheDir().delete();
-    }
-
-    /**
-     * 递归删除 文件/文件夹
-     *
-     * @param file
-     */
-    private static void deleteFile(File file) {
-        if (file.exists()) {
-            if (file.isFile()) {
-                file.delete();
-            } else if (file.isDirectory()) {
-                File files[] = file.listFiles();
-                for (int i = 0; i < files.length; i++) {
-                    deleteFile(files[i]);
-                }
-            }
-            file.delete();
-        }
     }
 
     /**
@@ -286,63 +267,4 @@ public class HostJsScope {
         return versionName;
     }
 
-    /**
-     * 清除app缓存
-     */
-    private static void clearAppCache(Activity activity) {
-        // 清除webview缓存
-        @SuppressWarnings("deprecation")
-        File file = activity.getCacheDir();
-        // 先删除WebViewCache目录下的文件
-        if (file != null && file.exists() && file.isDirectory()) {
-            for (File item : file.listFiles()) {
-                item.delete();
-            }
-            file.delete();
-        }
-        File file2 = activity.getExternalCacheDir();
-        if (file2 != null && file2.exists() && file2.isDirectory()) {
-            for (File item : file2.listFiles()) {
-                item.delete();
-            }
-            file2.delete();
-        }
-        activity.deleteDatabase("webview.db");
-        activity.deleteDatabase("webview.db-shm");
-        activity.deleteDatabase("webview.db-wal");
-        activity.deleteDatabase("webviewCache.db");
-        activity.deleteDatabase("webviewCache.db-shm");
-        activity.deleteDatabase("webviewCache.db-wal");
-        //清除数据缓存
-        clearCacheFolder(activity.getFilesDir(), System.currentTimeMillis());
-        clearCacheFolder(activity.getCacheDir(), System.currentTimeMillis());
-    }
-
-    /**
-     * 清除缓存目录
-     *
-     * @param dir     目录
-     * @param curTime 当前系统时间
-     * @return
-     */
-    private static int clearCacheFolder(File dir, long curTime) {
-        int deletedFiles = 0;
-        if (dir != null && dir.isDirectory()) {
-            try {
-                for (File child : dir.listFiles()) {
-                    if (child.isDirectory()) {
-                        deletedFiles += clearCacheFolder(child, curTime);
-                    }
-                    if (child.lastModified() < curTime) {
-                        if (child.delete()) {
-                            deletedFiles++;
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return deletedFiles;
-    }
 }
